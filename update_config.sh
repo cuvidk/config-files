@@ -50,9 +50,15 @@ usage() {
 
 ################################################################################
 
+
 if [ -t 1 ]; then
     "${0}" "$@" >"${STDOUT_LOG}" 2>"${STDERR_LOG}"
     exit $?
+fi
+
+if [ "$(dirname $(realpath ${0}))" != "$(pwd)" ]; then
+    print_msg "ERR: Run the script from within the directory.\n"
+    exit 1
 fi
 
 # This is just a hack (required but can be ignored);
@@ -61,7 +67,7 @@ fi
 # screen. This way, any function requiring root access
 # won't overwrite the information being displayed on
 # screen with a password prompt.
-sudo ls >/dev/null || exit 1
+sudo ls >/dev/null || exit 2
 
 g_home_dir="${HOME}"
 g_user="${USER}"
@@ -85,14 +91,14 @@ while [ $# -gt 0 ]; do
             ;;
         *)
             usage
-            exit 2
+            exit 3
             ;;
     esac
 done
 
 if [ ! -d "${g_home_dir}" ]; then
     print_msg "ERR: Unknown user ${g_user}\n"
-    exit 3
+    exit 4
 fi
 
 case "${g_config}" in
@@ -124,4 +130,4 @@ esac
 
 perform_task fix_config_permissions "Fixing permissions "
 
-errors_encountered && exit 4 || exit 0
+errors_encountered && exit 5 || exit 0
