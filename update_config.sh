@@ -1,43 +1,38 @@
 #!/bin/sh
 
-. ./util.sh
-
-STDOUT_LOG="stdout.log"
-STDERR_LOG="stderr.log"
-
 ################################################################################
 
 configure_i3() {
     mkdir -p "$g_home_dir/.config/i3" &&
-        cp ./config-files/i3/config "$g_home_dir/.config/i3/"
+        cp "${WORKING_DIR}/config-files/i3/config" "$g_home_dir/.config/i3/"
 }
 
 configure_i3status() {
     mkdir -p "$g_home_dir/.config/i3status" &&
-        cp ./config-files/i3status/config "$g_home_dir/.config/i3status/"
+        cp "${WORKING_DIR}/config-files/i3status/config" "$g_home_dir/.config/i3status/"
 }
 
 configure_vim() {
-    sudo cp -R ./config-files/vim/etc /
+    sudo cp -R "${WORKING_DIR}/config-files/vim/etc" /
 }
 
 configure_urxvt() {
     sudo mkdir -p "/etc/conf.d/urxvt" &&
-    sudo cp -R ./config-files/urxvt/etc / &&
+    sudo cp -R "${WORKING_DIR}/config-files/urxvt/etc" / &&
     sudo chmod +x /etc/X11/xinit/xinitrc.d/urxvt.sh
 }
 
 configure_ly() {
-    sudo cp -R ./config-files/ly/etc /
+    sudo cp -R "${WORKING_DIR}/config-files/ly/etc" /
 }
 
 configure_x11_input() {
     # is it worth copying this only if a touchpad is present ?
-    sudo cp -R ./config-files/X11/etc /
+    sudo cp -R "${WORKING_DIR}/config-files/X11/etc" /
 }
 
 notification_daemon() {
-    sudo cp -R ./config-files/notification-daemon/usr /
+    sudo cp -R "${WORKING_DIR}/config-files/notification-daemon/usr" /
 }
 
 fix_config_permissions() {
@@ -50,15 +45,16 @@ usage() {
 
 ################################################################################
 
+WORKING_DIR="$(realpath "$(dirname "${0}")")"
+
+. "${WORKING_DIR}/util.sh"
+
+STDOUT_LOG="${WORKING_DIR}/stdout.log"
+STDERR_LOG="${WORKING_DIR}/stderr.log"
 
 if [ -t 1 ]; then
     "${0}" "$@" >"${STDOUT_LOG}" 2>"${STDERR_LOG}"
     exit $?
-fi
-
-if [ "$(dirname $(realpath ${0}))" != "$(pwd)" ]; then
-    print_msg "ERR: Run the script from within the directory.\n"
-    exit 1
 fi
 
 # This is just a hack (required but can be ignored);
@@ -67,7 +63,7 @@ fi
 # screen. This way, any function requiring root access
 # won't overwrite the information being displayed on
 # screen with a password prompt.
-sudo ls >/dev/null || exit 2
+sudo ls >/dev/null || exit 1
 
 g_home_dir="${HOME}"
 g_user="${USER}"
@@ -91,14 +87,14 @@ while [ $# -gt 0 ]; do
             ;;
         *)
             usage
-            exit 3
+            exit 2
             ;;
     esac
 done
 
 if [ ! -d "${g_home_dir}" ]; then
     print_msg "ERR: Unknown user ${g_user}\n"
-    exit 4
+    exit 3
 fi
 
 case "${g_config}" in
@@ -130,4 +126,4 @@ esac
 
 perform_task fix_config_permissions "Fixing permissions "
 
-errors_encountered && exit 5 || exit 0
+errors_encountered && exit 4 || exit 0
