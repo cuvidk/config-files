@@ -47,15 +47,9 @@ usage() {
 
 WORKING_DIR="$(realpath "$(dirname "${0}")")"
 
-. "${WORKING_DIR}/util.sh"
+. "${WORKING_DIR}/shell-utils/util.sh"
 
-STDOUT_LOG="${WORKING_DIR}/stdout.log"
-STDERR_LOG="${WORKING_DIR}/stderr.log"
-
-if [ -t 1 ]; then
-    "${0}" "$@" >"${STDOUT_LOG}" 2>"${STDERR_LOG}"
-    exit $?
-fi
+setup_output
 
 # This is just a hack (required but can be ignored);
 # it's here to fix the output of the script. It requires
@@ -126,4 +120,5 @@ esac
 
 perform_task fix_config_permissions "Fixing permissions "
 
-errors_encountered && exit 4 || exit 0
+check_for_errors
+exit $?
