@@ -16,10 +16,9 @@ configure_vim() {
     sudo cp -R "${WORKING_DIR}/config-files/vim/etc" /
 }
 
-configure_urxvt() {
-    sudo mkdir -p "/etc/conf.d/urxvt" &&
-    sudo cp -R "${WORKING_DIR}/config-files/urxvt/etc" / &&
-    sudo chmod +x /etc/X11/xinit/xinitrc.d/urxvt.sh
+configure_kitty() {
+    mkdir -p "$g_home_dir/.config/kitty" &&
+        cp "${WORKING_DIR}/config-files/kitty/kitty.conf" "$g_home_dir/.config/kitty/"
 }
 
 configure_ly() {
@@ -101,8 +100,8 @@ case "${g_config}" in
     "vim")
         perform_task configure_vim "Applying vim config for user ${g_user}"
         ;;
-    "urxvt")
-        perform_task configure_urxvt "Applying urxvt config for user ${g_user}"
+    "kitty")
+        perform_task configure_kitty "Applying kitty config for user ${g_user}"
         ;;
     "ly")
         perform_task configure_ly "Applying ly config for user ${g_user}"
@@ -111,7 +110,7 @@ case "${g_config}" in
         perform_task configure_i3 "Applying i3 config for user ${g_user}"
         perform_task configure_i3status "Applying i3status config for user ${g_user}"
         perform_task configure_vim "Applying vim config for user ${g_user}"
-        perform_task configure_urxvt "Applying urxvt config for user ${g_user}"
+        perform_task configure_kitty "Applying kitty config for user ${g_user}"
         perform_task configure_ly "Applying ly config for user ${g_user}"
         perform_task configure_x11_input "Applying x11 config for user ${g_user}"
         perform_task notification_daemon "Applying notification-daemon config for user ${g_user}"
