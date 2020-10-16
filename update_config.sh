@@ -22,8 +22,8 @@ configure_vim() {
 
 configure_kitty() {
     mkdir -p "$g_home_dir/.config/kitty" &&
-        cp "${WORKING_DIR}/config-files/kitty/kitty.conf" "$g_home_dir/.config/kitty/"
-        sudo cp -R "${WORKING_DIR}/config-file/kitty/etc" /
+        cp "${WORKING_DIR}/config-files/kitty/kitty.conf" "$g_home_dir/.config/kitty/" &&
+        sudo cp -R "${WORKING_DIR}/config-files/kitty/etc" /
 }
 
 configure_ly() {
