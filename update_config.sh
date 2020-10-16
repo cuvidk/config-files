@@ -12,6 +12,10 @@ configure_i3status() {
         cp "${WORKING_DIR}/config-files/i3status/config" "$g_home_dir/.config/i3status/"
 }
 
+configure_picom() {
+    sudo cp -R "${WORKING_DIR}/config-files/picom/etc" /
+}
+
 configure_vim() {
     sudo cp -R "${WORKING_DIR}/config-files/vim/etc" /
 }
@@ -97,6 +101,9 @@ case "${g_config}" in
     "i3status")
         perform_task configure_i3status "Applying i3status config for user ${g_user}"
         ;;
+    "picom")
+        perform_task configure_picom "Applying picom config for user ${g_user}"
+        ;;
     "vim")
         perform_task configure_vim "Applying vim config for user ${g_user}"
         ;;
@@ -109,6 +116,7 @@ case "${g_config}" in
     *)
         perform_task configure_i3 "Applying i3 config for user ${g_user}"
         perform_task configure_i3status "Applying i3status config for user ${g_user}"
+        perform_task configure_picom "Applying picom config for user ${g_user}"
         perform_task configure_vim "Applying vim config for user ${g_user}"
         perform_task configure_kitty "Applying kitty config for user ${g_user}"
         perform_task configure_ly "Applying ly config for user ${g_user}"

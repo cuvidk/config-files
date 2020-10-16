@@ -20,6 +20,9 @@ smart_gaps on
 # sets random wallpaper
 exec_always --no-startup-id feh --bg-fill --randomize ~/Pictures/wallpapers/*
 
+# run the compositor for no screen tearing, fading, transparency, etc
+exec --no-startup-id picom -b
+
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
