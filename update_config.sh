@@ -1,15 +1,20 @@
 #!/bin/sh
 
-################################################################################
+G_HOME_DIR="${HOME}"
+G_USER="${USER}"
+WORKING_DIR="$(realpath "$(dirname "${0}")")"
+
+. "${WORKING_DIR}/shell-utils/util.sh"
+. "${WORKING_DIR}/install_paths.sh"
 
 configure_i3() {
-    mkdir -p "$g_home_dir/.config/i3" &&
-        cp "${WORKING_DIR}/config-files/i3/config" "$g_home_dir/.config/i3/"
+    mkdir -p "${G_HOME_DIR}/.config/i3" &&
+        cp "${WORKING_DIR}/config-files/i3/config" "${G_HOME_DIR}/.config/i3/"
 }
 
 configure_i3status() {
-    mkdir -p "$g_home_dir/.config/i3status" &&
-        cp "${WORKING_DIR}/config-files/i3status/config" "$g_home_dir/.config/i3status/"
+    mkdir -p "${G_HOME_DIR}/.config/i3status" &&
+        cp "${WORKING_DIR}/config-files/i3status/config" "${G_HOME_DIR}/.config/i3status/"
 }
 
 configure_picom() {
@@ -21,9 +26,13 @@ configure_vim() {
 }
 
 configure_kitty() {
-    mkdir -p "$g_home_dir/.config/kitty" &&
-        cp "${WORKING_DIR}/config-files/kitty/kitty.conf" "$g_home_dir/.config/kitty/" &&
+    mkdir -p "${G_HOME_DIR}/.config/kitty" &&
+        cp "${WORKING_DIR}/config-files/kitty/kitty.conf" "${G_HOME_DIR}/.config/kitty/" &&
         sudo cp -R "${WORKING_DIR}/config-files/kitty/etc" /
+}
+
+configure_zsh() {
+    sed "s|ZSH_INSTALL_PATH|${PATH_OHMYZSH}|" "${WORKING_DIR}/config-files/zsh/.zshrc" | sudo tee "${G_HOME_DIR}/.zshrc"
 }
 
 configure_ly() {
@@ -40,93 +49,93 @@ notification_daemon() {
 }
 
 fix_config_permissions() {
-    sudo chown -R "$g_user":"$g_user" "$g_home_dir/.config"
+    if [ -d "${G_HOME_DIR}/.config" ]; then
+        sudo chown -R "${G_USER}":"${G_USER}" "${G_HOME_DIR}/.config"
+    fi
 }
 
 usage() {
     print_msg "Usage: ${0} [--user|-u <username>] [--config|-c <config>] [--help|-h]\n"
 }
 
-################################################################################
+main() {
+    # This is just a hack (required but can be ignored);
+    # it's here to fix the output of the script. It requires
+    # the root password before outputing anything on the
+    # screen. This way, any function requiring root access
+    # won't overwrite the information being displayed on
+    # screen with a password prompt.
+    sudo ls >/dev/null || exit 1
+    setup_output
 
-WORKING_DIR="$(realpath "$(dirname "${0}")")"
 
-. "${WORKING_DIR}/shell-utils/util.sh"
+    while [ $# -gt 0 ]; do
+        case "${1}" in
+            "--help"|"-h")
+                usage
+                exit 0
+                ;;
+            "--user"|"-u")
+                G_HOME_DIR="$(grep "${2}" /etc/passwd | cut -d ':' -f6)"
+                G_USER="${2}"
+                shift
+                shift
+                ;;
+            "--config"|"-c")
+                G_CONFIG="${2}"
+                shift
+                shift
+                ;;
+            *)
+                usage
+                exit 2
+                ;;
+        esac
+    done
 
-setup_output
+    if [ ! -d "${G_HOME_DIR}" ]; then
+        print_msg "ERR: Unknown user ${G_USER}\n"
+        exit 3
+    fi
 
-# This is just a hack (required but can be ignored);
-# it's here to fix the output of the script. It requires
-# the root password before outputing anything on the
-# screen. This way, any function requiring root access
-# won't overwrite the information being displayed on
-# screen with a password prompt.
-sudo ls >/dev/null || exit 1
-
-g_home_dir="${HOME}"
-g_user="${USER}"
-
-while [ $# -gt 0 ]; do
-    case "${1}" in
-        "--help"|"-h")
-            usage
-            exit 0
+    case "${G_CONFIG}" in
+        "i3")
+            perform_task configure_i3 "Applying i3 config for user ${G_USER}"
             ;;
-        "--user"|"-u")
-            g_home_dir="$(grep "${2}" /etc/passwd | cut -d ':' -f6)"
-            g_user="${2}"
-            shift
-            shift
+        "i3status")
+            perform_task configure_i3status "Applying i3status config for user ${G_USER}"
             ;;
-        "--config"|"-c")
-            g_config="${2}"
-            shift
-            shift
+        "picom")
+            perform_task configure_picom "Applying picom config for user ${G_USER}"
+            ;;
+        "vim")
+            perform_task configure_vim "Applying vim config for user ${G_USER}"
+            ;;
+        "kitty")
+            perform_task configure_kitty "Applying kitty config for user ${G_USER}"
+            ;;
+        "ly")
+            perform_task configure_ly "Applying ly config for user ${G_USER}"
+            ;;
+        "zsh")
+            perform_task configure_zsh "Applying zsh config for user ${G_USER}"
             ;;
         *)
-            usage
-            exit 2
+            perform_task configure_i3 "Applying i3 config for user ${G_USER}"
+            perform_task configure_i3status "Applying i3status config for user ${G_USER}"
+            perform_task configure_picom "Applying picom config for user ${G_USER}"
+            perform_task configure_vim "Applying vim config for user ${G_USER}"
+            perform_task configure_kitty "Applying kitty config for user ${G_USER}"
+            perform_task configure_zsh "Applying zsh config for user ${G_USER}"
+            perform_task configure_ly "Applying ly config for user ${G_USER}"
+            perform_task configure_x11_input "Applying x11 config for user ${G_USER}"
+            perform_task notification_daemon "Applying notification-daemon config for user ${G_USER}"
             ;;
     esac
-done
 
-if [ ! -d "${g_home_dir}" ]; then
-    print_msg "ERR: Unknown user ${g_user}\n"
-    exit 3
-fi
+    perform_task fix_config_permissions "Fixing permissions "
 
-case "${g_config}" in
-    "i3")
-        perform_task configure_i3 "Applying i3 config for user ${g_user}"
-        ;;
-    "i3status")
-        perform_task configure_i3status "Applying i3status config for user ${g_user}"
-        ;;
-    "picom")
-        perform_task configure_picom "Applying picom config for user ${g_user}"
-        ;;
-    "vim")
-        perform_task configure_vim "Applying vim config for user ${g_user}"
-        ;;
-    "kitty")
-        perform_task configure_kitty "Applying kitty config for user ${g_user}"
-        ;;
-    "ly")
-        perform_task configure_ly "Applying ly config for user ${g_user}"
-        ;;
-    *)
-        perform_task configure_i3 "Applying i3 config for user ${g_user}"
-        perform_task configure_i3status "Applying i3status config for user ${g_user}"
-        perform_task configure_picom "Applying picom config for user ${g_user}"
-        perform_task configure_vim "Applying vim config for user ${g_user}"
-        perform_task configure_kitty "Applying kitty config for user ${g_user}"
-        perform_task configure_ly "Applying ly config for user ${g_user}"
-        perform_task configure_x11_input "Applying x11 config for user ${g_user}"
-        perform_task notification_daemon "Applying notification-daemon config for user ${g_user}"
-        ;;
-esac
+    check_for_errors
+}
 
-perform_task fix_config_permissions "Fixing permissions "
-
-check_for_errors
-exit $?
+main "${@}"
