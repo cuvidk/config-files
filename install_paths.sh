@@ -1,3 +1,4 @@
 #!/bin/sh
 
-PATH_OHMYZSH='/usr/share/ohmyzsh'
+PATH_OHMYZSH='/usr/share/zsh/ohmyzsh'
+PATH_PURE="/usr/share/zsh/themes/pure"

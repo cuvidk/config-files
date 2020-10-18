@@ -1,20 +1,19 @@
 #!/bin/sh
 
-G_HOME_DIR="${HOME}"
+HOME="${HOME}"
 G_USER="${USER}"
 WORKING_DIR="$(realpath "$(dirname "${0}")")"
 
 . "${WORKING_DIR}/shell-utils/util.sh"
-. "${WORKING_DIR}/install_paths.sh"
 
 configure_i3() {
-    mkdir -p "${G_HOME_DIR}/.config/i3" &&
-        cp "${WORKING_DIR}/config-files/i3/config" "${G_HOME_DIR}/.config/i3/"
+    sudo mkdir -p "${HOME}/.config/i3" &&
+        sudo cp "${WORKING_DIR}/config-files/i3/config" "${HOME}/.config/i3/"
 }
 
 configure_i3status() {
-    mkdir -p "${G_HOME_DIR}/.config/i3status" &&
-        cp "${WORKING_DIR}/config-files/i3status/config" "${G_HOME_DIR}/.config/i3status/"
+    sudo mkdir -p "${HOME}/.config/i3status" &&
+        sudo cp "${WORKING_DIR}/config-files/i3status/config" "${HOME}/.config/i3status/"
 }
 
 configure_picom() {
@@ -26,13 +25,19 @@ configure_vim() {
 }
 
 configure_kitty() {
-    mkdir -p "${G_HOME_DIR}/.config/kitty" &&
-        cp "${WORKING_DIR}/config-files/kitty/kitty.conf" "${G_HOME_DIR}/.config/kitty/" &&
+    sudo mkdir -p "${HOME}/.config/kitty" &&
+        sudo cp "${WORKING_DIR}/config-files/kitty/kitty.conf" "${HOME}/.config/kitty/" &&
         sudo cp -R "${WORKING_DIR}/config-files/kitty/etc" /
 }
 
 configure_zsh() {
-    sed "s|ZSH_INSTALL_PATH|${PATH_OHMYZSH}|" "${WORKING_DIR}/config-files/zsh/.zshrc" | sudo tee "${G_HOME_DIR}/.zshrc"
+    if [ -d "${PATH_PURE}" ]; then
+        sudo mkdir -p "${PATH_PURE}"
+        sudo git clone 'https://github.com/sindresorhus/pure.git' "${PATH_PURE}"
+    fi
+    sed "s|ZSH_INSTALL_PATH|${PATH_OHMYZSH}|" "${WORKING_DIR}/config-files/zsh/.zshrc" | 
+        sed "s|PURE_INSTALL_PATH|${PATH_PURE}|" |
+        sudo tee "${HOME}/.zshrc"
 }
 
 configure_ly() {
@@ -49,8 +54,8 @@ notification_daemon() {
 }
 
 fix_config_permissions() {
-    if [ -d "${G_HOME_DIR}/.config" ]; then
-        sudo chown -R "${G_USER}":"${G_USER}" "${G_HOME_DIR}/.config"
+    if [ -d "${HOME}/.config" ]; then
+        sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.config"
     fi
 }
 
@@ -68,7 +73,6 @@ main() {
     sudo ls >/dev/null || exit 1
     setup_output
 
-
     while [ $# -gt 0 ]; do
         case "${1}" in
             "--help"|"-h")
@@ -76,7 +80,7 @@ main() {
                 exit 0
                 ;;
             "--user"|"-u")
-                G_HOME_DIR="$(grep "${2}" /etc/passwd | cut -d ':' -f6)"
+                HOME="$(grep "${2}" /etc/passwd | cut -d ':' -f6)"
                 G_USER="${2}"
                 shift
                 shift
@@ -93,7 +97,9 @@ main() {
         esac
     done
 
-    if [ ! -d "${G_HOME_DIR}" ]; then
+    . "${WORKING_DIR}/install_paths.sh"
+
+    if [ ! -d "${HOME}" ]; then
         print_msg "ERR: Unknown user ${G_USER}\n"
         exit 3
     fi
