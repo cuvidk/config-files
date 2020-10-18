@@ -31,7 +31,7 @@ configure_kitty() {
 }
 
 configure_zsh() {
-    if [ -d "${PATH_PURE}" ]; then
+    if [ ! -d "${PATH_PURE}" ]; then
         sudo mkdir -p "${PATH_PURE}"
         sudo git clone 'https://github.com/sindresorhus/pure.git' "${PATH_PURE}"
     fi
