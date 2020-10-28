@@ -40,6 +40,12 @@ configure_zsh() {
         sudo tee "${HOME}/.zshrc"
 }
 
+configure_ssh() {
+    sudo mkdir -p "${HOME}/.ssh" &&
+        sudo cp -R "${WORKING_DIR}/config-files/ssh/ssh-agent.sh" "${HOME}/.ssh" &&
+        echo '. ${HOME}/.ssh/ssh-agent.sh' | sudo tee -a "${HOME}/.zprofile"
+}
+
 configure_ly() {
     sudo cp -R "${WORKING_DIR}/config-files/ly/etc" /
 }
@@ -126,6 +132,9 @@ main() {
         "zsh")
             perform_task configure_zsh "Applying zsh config for user ${G_USER}"
             ;;
+        "ssh")
+            perform_task configure_ssh "Applying ssh config for user ${G_USER}"
+            ;;
         *)
             perform_task configure_i3 "Applying i3 config for user ${G_USER}"
             perform_task configure_i3status "Applying i3status config for user ${G_USER}"
@@ -133,6 +142,7 @@ main() {
             perform_task configure_vim "Applying vim config for user ${G_USER}"
             perform_task configure_kitty "Applying kitty config for user ${G_USER}"
             perform_task configure_zsh "Applying zsh config for user ${G_USER}"
+            perform_task configure_ssh "Applying ssh config for user ${G_USER}"
             perform_task configure_ly "Applying ly config for user ${G_USER}"
             perform_task configure_x11_input "Applying x11 config for user ${G_USER}"
             perform_task notification_daemon "Applying notification-daemon config for user ${G_USER}"
