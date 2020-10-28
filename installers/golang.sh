@@ -3,20 +3,13 @@
 WORKING_DIR="$(realpath "$(dirname "${0}")")"
 
 . "${WORKING_DIR}/../shell-utils/util.sh"
-. "${WORKING_DIR}/../install_paths.sh"
 
 install() {
     sudo pacman -S --needed --noconfirm go
-    sudo mkdir -p "${PATH_GOLANG}"
-    sudo chown -R "${USER}:${USER}" "${PATH_GOLANG}"
-    echo "export GOPATH=${PATH_GOLANG}" | sudo tee "/etc/profile.d/go.sh"
-    . /etc/profile.d/go.sh
 }
 
 uninstall() {
     sudo pacman -Rs --noconfirm go
-    sudo rm -rf /etc/profile.d/go.sh
-    sudo rm -rf "${PATH_GOLANG}"
 }
 
 usage() {
