@@ -46,6 +46,11 @@ configure_ssh() {
         echo '. ${HOME}/.ssh/ssh-agent.sh' | sudo tee -a "${HOME}/.zprofile"
 }
 
+configure_docker() {
+    sudo mkdir -p "${HOME}/.docker" &&
+        sudo cp "${WORKING_DIR}/config-files/docker/config.json" "${HOME}/.docker"
+}
+
 configure_ly() {
     sudo cp -R "${WORKING_DIR}/config-files/ly/etc" /
 }
@@ -63,6 +68,7 @@ fix_config_permissions() {
     if [ -d "${HOME}/.config" ]; then
         sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.config"
     fi
+    sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.docker"
 }
 
 usage() {
@@ -135,6 +141,9 @@ main() {
         "ssh")
             perform_task configure_ssh "Applying ssh config for user ${G_USER}"
             ;;
+        "docker")
+            perform_task configure_docker "Applying docker config for user ${G_USER}"
+            ;;
         *)
             perform_task configure_i3 "Applying i3 config for user ${G_USER}"
             perform_task configure_i3status "Applying i3status config for user ${G_USER}"
@@ -143,6 +152,7 @@ main() {
             perform_task configure_kitty "Applying kitty config for user ${G_USER}"
             perform_task configure_zsh "Applying zsh config for user ${G_USER}"
             perform_task configure_ssh "Applying ssh config for user ${G_USER}"
+            perform_task configure_docker "Applying docker config for user ${G_USER}"
             perform_task configure_ly "Applying ly config for user ${G_USER}"
             perform_task configure_x11_input "Applying x11 config for user ${G_USER}"
             perform_task notification_daemon "Applying notification-daemon config for user ${G_USER}"
