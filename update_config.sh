@@ -48,12 +48,13 @@ configure_ssh() {
 
 configure_docker() {
     sudo mkdir -p "${HOME}/.docker" &&
-        sudo cp "${WORKING_DIR}/config-files/docker/config.json" "${HOME}/.docker"
+        sudo cp "${WORKING_DIR}/config-files/docker/config.json" "${HOME}/.docker" &&
+        sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.docker"
 }
 
 configure_go() {
     sudo mkdir -p "${PATH_GOLANG}" &&
-    sed "s/PATH_GOLANG/${PATH_GOLANG}/" "${WORKING_DIR}/config-files/go/etc/profile.d/go.sh" |
+        sed "s|PATH_GOLANG|${PATH_GOLANG}|" "${WORKING_DIR}/config-files/go/etc/profile.d/go.sh" |
         sudo tee /etc/profile.d/go.sh
 }
 
@@ -74,7 +75,6 @@ fix_config_permissions() {
     if [ -d "${HOME}/.config" ]; then
         sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.config"
     fi
-    sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.docker"
 }
 
 usage() {
