@@ -78,7 +78,7 @@ fix_config_permissions() {
 }
 
 usage() {
-    print_msg "Usage: ${0} [--user|-u <username>] [--config|-c <config>] [--help|-h]\n"
+    print_msg "Usage: ${0} [--user|-u <username>] [--config|-c <config>] [--help|-h] [--verbose|-v]\n"
 }
 
 main() {
@@ -89,7 +89,8 @@ main() {
     # won't overwrite the information being displayed on
     # screen with a password prompt.
     sudo ls >/dev/null || exit 1
-    setup_output
+
+    setup_verbosity "${@}"
 
     while [ $# -gt 0 ]; do
         case "${1}" in
@@ -109,8 +110,7 @@ main() {
                 shift
                 ;;
             *)
-                usage
-                exit 2
+                shift
                 ;;
         esac
     done
@@ -119,7 +119,7 @@ main() {
 
     if [ ! -d "${HOME}" ]; then
         print_msg "ERR: Unknown user ${G_USER}\n"
-        exit 3
+        exit 2
     fi
 
     case "${G_CONFIG}" in

@@ -18,7 +18,7 @@ usage() {
 
 main() {
     sudo ls /etc/shadow >/dev/null
-    setup_output
+    setup_verbosity "${@}"
 
     case "${1}" in
         "install")

@@ -19,13 +19,13 @@ uninstall() {
 }
 
 install_deps() {
-    "${WORKING_DIR}/golang.sh" install &&
+    "${WORKING_DIR}/golang.sh" install ${VERBOSE} &&
         export GOPATH="${PATH_GOLANG}"
 }
 
 uninstall_deps() {
     sudo rm -rf /usr/bin/docker-credential-secretservice
-    "${WORKING_DIR}/golang.sh" uninstall
+    "${WORKING_DIR}/golang.sh" uninstall ${VERBOSE}
 }
 
 usage() {
@@ -34,7 +34,7 @@ usage() {
 
 main() {
     sudo ls /etc/shadow >/dev/null
-    setup_output
+    setup_verbosity "${@}"
 
     case "${1}" in
         "install")
