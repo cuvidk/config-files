@@ -38,12 +38,14 @@ configure_zsh() {
     sed "s|ZSH_INSTALL_PATH|${PATH_OHMYZSH}|" "${WORKING_DIR}/config-files/zsh/.zshrc" | 
         sed "s|PURE_INSTALL_PATH|${PATH_PURE}|" |
         sudo tee "${HOME}/.zshrc"
+    sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.zshrc"
 }
 
 configure_ssh() {
     sudo mkdir -p "${HOME}/.ssh" &&
         sudo cp -R "${WORKING_DIR}/config-files/ssh/ssh-agent.sh" "${HOME}/.ssh" &&
-        echo '. ${HOME}/.ssh/ssh-agent.sh' | sudo tee -a "${HOME}/.zprofile"
+        echo '. ${HOME}/.ssh/ssh-agent.sh' | sudo tee -a "${HOME}/.zprofile" &&
+        sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.ssh"
 }
 
 configure_docker() {
