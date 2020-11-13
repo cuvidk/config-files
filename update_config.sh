@@ -6,11 +6,6 @@ WORKING_DIR="$(realpath "$(dirname "${0}")")"
 
 . "${WORKING_DIR}/shell-utils/util.sh"
 
-configure_i3() {
-    sudo mkdir -p "${HOME}/.config/i3" &&
-        sudo cp "${WORKING_DIR}/config-files/i3/config" "${HOME}/.config/i3/"
-}
-
 configure_i3status() {
     sudo mkdir -p "${HOME}/.config/i3status" &&
         sudo cp "${WORKING_DIR}/config-files/i3status/config" "${HOME}/.config/i3status/"
@@ -125,9 +120,6 @@ main() {
     fi
 
     case "${G_CONFIG}" in
-        "i3")
-            perform_task configure_i3 "Applying i3 config for user ${G_USER}"
-            ;;
         "i3status")
             perform_task configure_i3status "Applying i3status config for user ${G_USER}"
             ;;
@@ -156,7 +148,6 @@ main() {
             perform_task configure_go "Applying go config for user ${G_USER}"
             ;;
         *)
-            perform_task configure_i3 "Applying i3 config for user ${G_USER}"
             perform_task configure_i3status "Applying i3status config for user ${G_USER}"
             perform_task configure_picom "Applying picom config for user ${G_USER}"
             perform_task configure_vim "Applying vim config for user ${G_USER}"
