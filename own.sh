@@ -17,6 +17,10 @@ chown_i3() {
     chown -R "${USER}":"${USER}" "$(echo ${PATH_I3_CONFIG} | sed "s|HOME|${HOME}|")"
 }
 
+chown_i3status() {
+    chown -R "${USER}":"${USER}" "$(echo ${PATH_I3_STATUS_CONFIG} | sed "s|HOME|${HOME}|")"
+}
+
 main() {
     setup_verbosity "${@}"
 
@@ -24,8 +28,12 @@ main() {
         "i3")
             perform_task chown_i3 'Fixing owner for i3'
             ;;
+        "i3status")
+            perform_task chown_i3status 'Fixing owner for i3status'
+            ;;
         "all")
             perform_task chown_i3 'Fixing owner for i3'
+            perform_task chown_i3 'Fixing owner for i3status'
             ;;
         *)
             usage
