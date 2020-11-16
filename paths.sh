@@ -3,6 +3,7 @@
 PATH_OHMYZSH='/usr/share/zsh/ohmyzsh'
 PATH_PURE='/usr/share/zsh/themes/pure'
 PATH_GOLANG='/opt/go'
+PATH_DOCKER_SECRET_SERVICE='/usr/bin/docker-credential-secretservice'
 
 PATH_I3_CONFIG='HOME/.config/i3/config'
 PATH_I3_STATUS_CONFIG='HOME/.config/i3status/config'

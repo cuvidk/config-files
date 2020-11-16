@@ -24,18 +24,6 @@ configure_ssh() {
         sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.ssh"
 }
 
-configure_docker() {
-    sudo mkdir -p "${HOME}/.docker" &&
-        sudo cp "${WORKING_DIR}/config-files/docker/config.json" "${HOME}/.docker" &&
-        sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.docker"
-}
-
-configure_go() {
-    sudo mkdir -p "${PATH_GOLANG}" &&
-        sed "s|PATH_GOLANG|${PATH_GOLANG}|" "${WORKING_DIR}/config-files/go/etc/profile.d/go.sh" |
-        sudo tee /etc/profile.d/go.sh
-}
-
 configure_ly() {
     sudo cp -R "${WORKING_DIR}/config-files/ly/etc" /
 }
@@ -106,17 +94,9 @@ main() {
         "ssh")
             perform_task configure_ssh "Applying ssh config for user ${G_USER}"
             ;;
-        "docker")
-            perform_task configure_docker "Applying docker config for user ${G_USER}"
-            ;;
-        "go")
-            perform_task configure_go "Applying go config for user ${G_USER}"
-            ;;
         *)
             perform_task configure_zsh "Applying zsh config for user ${G_USER}"
             perform_task configure_ssh "Applying ssh config for user ${G_USER}"
-            perform_task configure_docker "Applying docker config for user ${G_USER}"
-            perform_task configure_go "Applying go config for user ${G_USER}"
             perform_task configure_ly "Applying ly config for user ${G_USER}"
             perform_task notification_daemon "Applying notification-daemon config for user ${G_USER}"
             ;;
