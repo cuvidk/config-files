@@ -13,11 +13,11 @@ fi
 install() {(
     set -e
 
-    mkdir -p "${PATH_CONFIG}"
+    mkdir -p "$(dirname ${PATH_CONFIG})"
     cp "${SCRIPT_DIR}/config/config" "${PATH_CONFIG}"
 
     if [ -n "${SUDO_HOME}" ]; then
-        mkdir -p "${SUDO_PATH_CONFIG}"
+        mkdir -p "$(dirname ${SUDO_PATH_CONFIG})"
         cp "${SCRIPT_DIR}/config/config" "${SUDO_PATH_CONFIG}"
     fi
 )}

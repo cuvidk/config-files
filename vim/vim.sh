@@ -1,17 +1,22 @@
 #!/bin/sh
 
 SCRIPT_DIR="$(realpath "$(dirname "${0}")")"
-. "${SCRIPT_DIR}/../paths.sh"
 . "${SCRIPT_DIR}/../shell-utils/util.sh"
 
-install() {(
-    set -e
-    mkdir -p "$(dirname "${DIR_PICOM_CONFIG}")"
-    cp "${SCRIPT_DIR}/config/picom.conf" "${PATH_PICOM_CONFIG}"
-)}
+install() {
+    pacman -S --noconfirm --needed vim
+}
+
+post_install() {
+    "${SCRIPT_DIR}/vim_config.sh" install ${VERBOSE}
+}
 
 uninstall() {
-    rm -rf "${PATH_PICOM_CONFIG}"
+    pacman -Rs --noconfirm vim
+}
+
+post_uninstall() {
+    "${SCRIPT_DIR}/vim.sh" uninstall ${VERBOSE}
 }
 
 usage() {
@@ -23,10 +28,12 @@ main() {
 
     case "${1}" in
         "install")
-            perform_task install 'Installing picom config'
+            perform_task install 'Installing vim'
+            perform_task post_install
             ;;
         "uninstall")
-            perform_task uninstall 'Uninstalling picom config'
+            perform_task uninstall 'Uninstalling vim'
+            perform_task post_uninstall
             ;;
         *)
             usage
