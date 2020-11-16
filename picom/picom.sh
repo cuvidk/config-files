@@ -7,20 +7,24 @@ install() {
     pacman -S --noconfirm --needed picom
 }
 
-post_install() {
-    "${SCRIPT_DIR}/picom_config.sh" install ${VERBOSE}
-}
+post_install() {(
+    set -e
+    "${SCRIPT_DIR}/picom_config.sh" install --for-user "${USER}" ${VERBOSE}
+    [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/picom_config.sh" install --for-user "${SUDO_USER}" ${VERBOSE}
+)}
 
 uninstall() {
     pacman -Rs --noconfirm picom
 }
 
-post_uninstall() {
-    "${SCRIPT_DIR}/picom_config.sh" uninstall ${VERBOSE}
-}
+post_uninstall() {(
+    set -e
+    "${SCRIPT_DIR}/picom_config.sh" uninstall --for-user "${USER}" ${VERBOSE}
+    [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/picom_config.sh" uninstall --for-user "${SUDO_USER}" ${VERBOSE}
+)}
 
 usage() {
-    print_msg "Usage: ${0} [install | uninstall] [--verbose]"
+    print_msg "Usage: ${0} <install | uninstall> [--verbose]"
 }
 
 main() { 
@@ -28,11 +32,11 @@ main() {
 
     case "${1}" in
         "install")
-            perform_task install 'Installing picom'
+            perform_task install 'installing picom'
             perform_task post_install
             ;;
         "uninstall")
-            perform_task uninstall 'Uninstalling picom'
+            perform_task uninstall 'uninstalling picom'
             perform_task post_uninstall
             ;;
         *)

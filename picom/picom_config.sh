@@ -6,7 +6,7 @@ SCRIPT_DIR="$(realpath "$(dirname "${0}")")"
 
 install() {(
     set -e
-    mkdir -p "$(dirname "${DIR_PICOM_CONFIG}")"
+    mkdir -p "$(dirname "${PATH_PICOM_CONFIG}")"
     cp "${SCRIPT_DIR}/config/picom.conf" "${PATH_PICOM_CONFIG}"
 )}
 
@@ -15,7 +15,7 @@ uninstall() {
 }
 
 usage() {
-    print_msg "Usage: ${0} [install | uninstall] [--verbose]"
+    print_msg "Usage: ${0} <install|uninstall> --for-user <username> [--verbose]"
 }
 
 main() { 
@@ -23,16 +23,39 @@ main() {
 
     case "${1}" in
         "install")
-            perform_task install 'Installing picom config'
+            action=install
+            shift
             ;;
         "uninstall")
-            perform_task uninstall 'Uninstalling picom config'
+            action=uninstall
+            shift
             ;;
         *)
             usage
             exit 1
             ;;
     esac
+
+    USER=
+    while [ $# -gt 0 ]; do
+        case "${1}" in
+            "--for-user")
+                USER="${2}"
+                break
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    [ -z "${USER}" ] && usage && exit 2
+    HOME="$(cat /etc/passwd | grep "${USER}" | cut -d ':' -f 6)"
+    [ -z "${HOME}" ] && usage && exit 3
+
+    PATH_PICOM_CONFIG=$(echo ${PATH_PICOM_CONFIG} | sed "s|HOME|${HOME}|")
+
+    perform_task ${action} "${action}ing picom config for user ${USER}"
 
     check_for_errors
 }

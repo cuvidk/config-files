@@ -4,32 +4,21 @@ SCRIPT_DIR="$(realpath "$(dirname "${0}")")"
 . "${SCRIPT_DIR}/../paths.sh"
 . "${SCRIPT_DIR}/../shell-utils/util.sh"
 
-PATH_CONFIG=$(echo ${PATH_VIM_CONFIG} | sed "s|HOME|${HOME}|")
-if [ -n "${SUDO_USER}" ]; then
-    SUDO_HOME="$(cat /etc/passwd | grep "${SUDO_USER}" | cut -d ':' -f6)"
-    SUDO_PATH_CONFIG=$(echo ${PATH_VIM_CONFIG} | sed "s|HOME|${SUDO_HOME}|")
-fi
-
 install() {(
     set -e
-
     mkdir -p "$(dirname "${PATH_VIM_PROFILE}")"
     cp "${SCRIPT_DIR}/config/vim.sh" "${PATH_VIM_PROFILE}"
-
-    cp "${SCRIPT_DIR}/config/.vimrc" "${PATH_CONFIG}"
-    if [ -n "${SUDO_HOME}" ]; then
-        cp "${SCRIPT_DIR}/config/.vimrc" "${SUDO_PATH_CONFIG}"
-    fi
+    cp "${SCRIPT_DIR}/config/.vimrc" "${PATH_VIM_CONFIG}"
 )}
 
 uninstall() {(
     set -e
-    rm -rf "${PATH_CONFIG}"
+    rm -rf "${PATH_VIM_CONFIG}"
     rm -rf "${PATH_VIM_PROFILE}"
 )}
 
 usage() {
-    print_msg "Usage: ${0} [install|uninstall] [--verbose]"
+    print_msg "Usage: ${0} <install|uninstall> --for-user <username> [--verbose]"
 }
 
 main() { 
@@ -37,16 +26,39 @@ main() {
 
     case "${1}" in
         "install")
-            perform_task install 'Installing vim config'
+            action=install
+            shift
             ;;
         "uninstall")
-            perform_task uninstall 'Uninstalling vim config'
+            action=uninstall
+            shift
             ;;
         *)
             usage
             exit 1
             ;;
     esac
+
+    USER=
+    while [ $# -gt 0 ]; do
+        case "${1}" in
+            "--for-user")
+                USER="${2}"
+                break
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    [ -z "${USER}" ] && usage && exit 2
+    HOME="$(cat /etc/passwd | grep "${USER}" | cut -d ':' -f 6)"
+    [ -z "${HOME}" ] && usage && exit 3
+
+    PATH_VIM_CONFIG=$(echo ${PATH_VIM_CONFIG} | sed "s|HOME|${HOME}|")
+
+    perform_task ${action} "${action}ing vim config for user ${USER}"
 
     check_for_errors
 }

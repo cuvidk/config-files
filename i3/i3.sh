@@ -7,20 +7,24 @@ install() {
     pacman -S --noconfirm --needed i3-gaps
 }
 
-post_install() {
-    "${SCRIPT_DIR}/i3_config.sh" install ${VERBOSE}
-}
+post_install() {(
+    set -e
+    "${SCRIPT_DIR}/i3_config.sh" install --for-user "${USER}" ${VERBOSE}
+    [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/i3_config.sh" install --for-user "${SUDO_USER}" ${VERBOSE}
+)}
 
 uninstall() {
     pacman -Rs --noconfirm i3-gaps
 }
 
-post_uninstall() {
-    "${SCRIPT_DIR}/i3_config.sh" uninstall ${VERBOSE}
-}
+post_uninstall() {(
+    set -e
+    "${SCRIPT_DIR}/i3_config.sh" uninstall --for-user "${USER}" ${VERBOSE}
+    [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/i3_config.sh" uninstall --for-user "${SUDO_USER}" ${VERBOSE}
+)}
 
 usage() {
-    print_msg "Usage: ${0} [install | uninstall] [--verbose]"
+    print_msg "Usage: ${0} <install | uninstall> [--verbose]"
 }
 
 main() { 
@@ -28,11 +32,11 @@ main() {
 
     case "${1}" in
         "install")
-            perform_task install 'Installing i3'
+            perform_task install 'installing i3'
             perform_task post_install
             ;;
         "uninstall")
-            perform_task uninstall 'Uninstalling i3'
+            perform_task uninstall 'uninstalling i3'
             perform_task post_uninstall
             ;;
         *)

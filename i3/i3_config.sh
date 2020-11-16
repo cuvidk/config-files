@@ -4,32 +4,18 @@ SCRIPT_DIR="$(realpath "$(dirname "${0}")")"
 . "${SCRIPT_DIR}/../paths.sh"
 . "${SCRIPT_DIR}/../shell-utils/util.sh"
 
-PATH_CONFIG=$(echo ${PATH_I3_CONFIG} | sed "s|HOME|${HOME}|")
-if [ -n "${SUDO_USER}" ]; then
-    SUDO_HOME="$(cat /etc/passwd | grep "${SUDO_USER}" | cut -d ':' -f6)"
-    SUDO_PATH_CONFIG=$(echo ${PATH_I3_CONFIG} | sed "s|HOME|${SUDO_HOME}|")
-fi
-
 install() {(
     set -e
-
-    mkdir -p "$(dirname ${PATH_CONFIG})"
-    cp "${SCRIPT_DIR}/config/config" "${PATH_CONFIG}"
-
-    if [ -n "${SUDO_HOME}" ]; then
-        mkdir -p "$(dirname ${SUDO_PATH_CONFIG})"
-        cp "${SCRIPT_DIR}/config/config" "${SUDO_PATH_CONFIG}"
-    fi
+    mkdir -p "$(dirname ${PATH_I3_CONFIG})"
+    cp "${SCRIPT_DIR}/config/config" "${PATH_I3_CONFIG}"
 )}
 
-uninstall() {(
-    set -e
-    rm -rf "${PATH_CONFIG}"
-    [ -n "${SUDO_HOME}" ] && rm -rf "${SUDO_PATH_CONFIG}"
-)}
+uninstall() {
+    rm -rf "${PATH_I3_CONFIG}"
+}
 
 usage() {
-    print_msg "Usage: ${0} [install|uninstall] [--verbose]"
+    print_msg "Usage: ${0} <install|uninstall> --for-user <username> [--verbose]"
 }
 
 main() { 
@@ -37,16 +23,39 @@ main() {
 
     case "${1}" in
         "install")
-            perform_task install 'Installing i3 config'
+            action=install
+            shift
             ;;
         "uninstall")
-            perform_task uninstall 'Uninstalling i3 config'
+            action=uninstall
+            shift
             ;;
         *)
             usage
             exit 1
             ;;
     esac
+
+    USER=
+    while [ $# -gt 0 ]; do
+        case "${1}" in
+            "--for-user")
+                USER="${2}"
+                break
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    [ -z "${USER}" ] && usage && exit 2
+    HOME="$(cat /etc/passwd | grep "${USER}" | cut -d ':' -f 6)"
+    [ -z "${HOME}" ] && usage && exit 3
+
+    PATH_I3_CONFIG=$(echo ${PATH_I3_CONFIG} | sed "s|HOME|${HOME}|")
+
+    perform_task ${action} "${action}ing i3 config for user ${USER}"
 
     check_for_errors
 }
