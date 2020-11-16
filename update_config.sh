@@ -6,16 +6,6 @@ WORKING_DIR="$(realpath "$(dirname "${0}")")"
 
 . "${WORKING_DIR}/shell-utils/util.sh"
 
-configure_vim() {
-    sudo cp -R "${WORKING_DIR}/config-files/vim/etc" /
-}
-
-configure_kitty() {
-    sudo mkdir -p "${HOME}/.config/kitty" &&
-        sudo cp "${WORKING_DIR}/config-files/kitty/kitty.conf" "${HOME}/.config/kitty/" &&
-        sudo cp -R "${WORKING_DIR}/config-files/kitty/etc" /
-}
-
 configure_zsh() {
     if [ ! -d "${PATH_PURE}" ]; then
         sudo mkdir -p "${PATH_PURE}"

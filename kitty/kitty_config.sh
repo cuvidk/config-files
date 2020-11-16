@@ -4,28 +4,31 @@ SCRIPT_DIR="$(realpath "$(dirname "${0}")")"
 . "${SCRIPT_DIR}/../paths.sh"
 . "${SCRIPT_DIR}/../shell-utils/util.sh"
 
-PATH_CONFIG=$(echo ${PATH_VIM_CONFIG} | sed "s|HOME|${HOME}|")
+PATH_CONFIG=$(echo ${PATH_KITTY_CONFIG} | sed "s|HOME|${HOME}|")
 if [ -n "${SUDO_USER}" ]; then
     SUDO_HOME="$(cat /etc/passwd | grep "${SUDO_USER}" | cut -d ':' -f6)"
-    SUDO_PATH_CONFIG=$(echo ${PATH_VIM_CONFIG} | sed "s|HOME|${SUDO_HOME}|")
+    SUDO_PATH_CONFIG=$(echo ${PATH_KITTY_CONFIG} | sed "s|HOME|${SUDO_HOME}|")
 fi
 
 install() {(
     set -e
 
-    mkdir -p "$(dirname "${PATH_VIM_PROFILE}")"
-    cp "${SCRIPT_DIR}/config/vim.sh" "${PATH_VIM_PROFILE}"
+    mkdir -p "$(dirname "${PATH_KITTY_PROFILE}")"
+    cp "${SCRIPT_DIR}/config/kitty.sh" "${PATH_KITTY_PROFILE}"
 
-    cp "${SCRIPT_DIR}/config/.vimrc" "${PATH_CONFIG}"
+    mkdir -p "$(dirname "${PATH_CONFIG}")"
+    cp "${SCRIPT_DIR}/config/kitty.conf" "${PATH_CONFIG}"
+
     if [ -n "${SUDO_HOME}" ]; then
-        cp "${SCRIPT_DIR}/config/.vimrc" "${SUDO_PATH_CONFIG}"
+        mkdir -p "$(dirname "${SUDO_PATH_CONFIG}")"
+        cp "${SCRIPT_DIR}/config/kitty.conf" "${SUDO_PATH_CONFIG}"
     fi
 )}
 
 uninstall() {(
     set -e
     rm -rf "${PATH_CONFIG}"
-    rm -rf "${PATH_VIM_PROFILE}"
+    [ -n "${SUDO_HOME}" ] && rm -rf "${SUDO_PATH_CONFIG}"
 )}
 
 usage() {
@@ -37,10 +40,10 @@ main() {
 
     case "${1}" in
         "install")
-            perform_task install 'Installing vim config'
+            perform_task install 'Installing kitty config'
             ;;
         "uninstall")
-            perform_task uninstall 'Uninstalling vim config'
+            perform_task uninstall 'Uninstalling kitty config'
             ;;
         *)
             usage
