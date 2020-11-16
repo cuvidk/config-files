@@ -40,10 +40,6 @@ configure_ly() {
     sudo cp -R "${WORKING_DIR}/config-files/ly/etc" /
 }
 
-configure_x11_input() {
-    # is it worth copying this only if a touchpad is present ?
-    sudo cp -R "${WORKING_DIR}/config-files/X11/etc" /
-}
 
 notification_daemon() {
     sudo cp -R "${WORKING_DIR}/config-files/notification-daemon/usr" /
@@ -101,12 +97,6 @@ main() {
     fi
 
     case "${G_CONFIG}" in
-        "vim")
-            perform_task configure_vim "Applying vim config for user ${G_USER}"
-            ;;
-        "kitty")
-            perform_task configure_kitty "Applying kitty config for user ${G_USER}"
-            ;;
         "ly")
             perform_task configure_ly "Applying ly config for user ${G_USER}"
             ;;
@@ -123,14 +113,11 @@ main() {
             perform_task configure_go "Applying go config for user ${G_USER}"
             ;;
         *)
-            perform_task configure_vim "Applying vim config for user ${G_USER}"
-            perform_task configure_kitty "Applying kitty config for user ${G_USER}"
             perform_task configure_zsh "Applying zsh config for user ${G_USER}"
             perform_task configure_ssh "Applying ssh config for user ${G_USER}"
             perform_task configure_docker "Applying docker config for user ${G_USER}"
             perform_task configure_go "Applying go config for user ${G_USER}"
             perform_task configure_ly "Applying ly config for user ${G_USER}"
-            perform_task configure_x11_input "Applying x11 config for user ${G_USER}"
             perform_task notification_daemon "Applying notification-daemon config for user ${G_USER}"
             ;;
     esac
