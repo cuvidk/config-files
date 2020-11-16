@@ -6,15 +6,6 @@ WORKING_DIR="$(realpath "$(dirname "${0}")")"
 
 . "${WORKING_DIR}/shell-utils/util.sh"
 
-configure_i3status() {
-    sudo mkdir -p "${HOME}/.config/i3status" &&
-        sudo cp "${WORKING_DIR}/config-files/i3status/config" "${HOME}/.config/i3status/"
-}
-
-configure_picom() {
-    sudo cp -R "${WORKING_DIR}/config-files/picom/etc" /
-}
-
 configure_vim() {
     sudo cp -R "${WORKING_DIR}/config-files/vim/etc" /
 }
@@ -120,12 +111,6 @@ main() {
     fi
 
     case "${G_CONFIG}" in
-        "i3status")
-            perform_task configure_i3status "Applying i3status config for user ${G_USER}"
-            ;;
-        "picom")
-            perform_task configure_picom "Applying picom config for user ${G_USER}"
-            ;;
         "vim")
             perform_task configure_vim "Applying vim config for user ${G_USER}"
             ;;
@@ -148,8 +133,6 @@ main() {
             perform_task configure_go "Applying go config for user ${G_USER}"
             ;;
         *)
-            perform_task configure_i3status "Applying i3status config for user ${G_USER}"
-            perform_task configure_picom "Applying picom config for user ${G_USER}"
             perform_task configure_vim "Applying vim config for user ${G_USER}"
             perform_task configure_kitty "Applying kitty config for user ${G_USER}"
             perform_task configure_zsh "Applying zsh config for user ${G_USER}"

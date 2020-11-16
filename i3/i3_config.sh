@@ -29,7 +29,7 @@ uninstall() {(
 )}
 
 usage() {
-    print_msg "Usage: ${0} [install] | [uninstall]"
+    print_msg "Usage: ${0} [install|uninstall] [--verbose]"
 }
 
 main() { 
