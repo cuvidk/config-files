@@ -55,8 +55,13 @@ main() {
     done
 
     [ -z "${USER}" ] && usage && exit 2
-    HOME="$(cat /etc/passwd | grep "${USER}" | cut -d ':' -f 6)"
-    [ -z "${HOME}" ] && usage && exit 3
+    for entry in $(cat /etc/passwd); do
+        if [ "${USER}" = "$(echo ${entry} | cut -d ':' -f 1)" ]; then
+            HOME="$(echo ${entry} | cut -d ':' -f 6)"
+            break
+        fi
+    done
+    [ -z "${HOME}" -o ! -d "${HOME}" ] && usage && exit 3
 
     PATH_ZSH_CONFIG=$(echo ${PATH_ZSH_CONFIG} | sed "s|HOME|${HOME}|")
 

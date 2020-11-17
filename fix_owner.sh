@@ -13,7 +13,14 @@ main() {
 
     [ -z "${1}" ] && usage && exit 1
     USER="${1}"
-    HOME="$(cat /etc/passwd | grep -E "^${USER}$" | cut -d ':' -f 6)"
+
+    HOME=
+    for entry in $(cat /etc/passwd); do
+        if [ "${USER}" = "$(echo ${entry} | cut -d ':' -f 1)" ]; then
+            HOME="$(echo ${entry} | cut -d ':' -f 6)"
+            break
+        fi
+    done
     [ -z "${HOME}" -o ! -d "${HOME}" ] && usage && exit 2
 
     PATH_VIM_CONFIG="$(echo "${PATH_VIM_CONFIG}" | sed "s|HOME|${HOME}|")"
