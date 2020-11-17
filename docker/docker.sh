@@ -24,7 +24,12 @@ post_install() {(
     set -e
     "${SCRIPT_DIR}/docker_config.sh" install --for-user "${USER}" ${VERBOSE}
     [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/docker_config.sh" install --for-user "${SUDO_USER}" ${VERBOSE}
+    systemctl enable docker.service
 )}
+
+pre_uninstall() {
+    systemctl disable docker.service
+}
 
 uninstall() {(
     set -e
@@ -54,6 +59,7 @@ main() {
             perform_task post_install
             ;;
         "uninstall")
+            perform_task pre_uninstall
             perform_task uninstall 'uninstalling docker'
             perform_task post_uninstall
             ;;
