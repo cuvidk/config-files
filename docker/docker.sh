@@ -5,8 +5,8 @@ SCRIPT_DIR="$(realpath "$(dirname "${0}")")"
 . "${SCRIPT_DIR}/../paths.sh"
 
 pre_install() {
-    "${SCRIPT_DIR}/../go/go.sh" install ${VERBOSE} &&
     export GOPATH="${PATH_GOLANG}"
+    "${SCRIPT_DIR}/../go/go.sh" install ${VERBOSE}
 }
 
 install() {(
