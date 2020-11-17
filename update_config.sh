@@ -6,17 +6,6 @@ WORKING_DIR="$(realpath "$(dirname "${0}")")"
 
 . "${WORKING_DIR}/shell-utils/util.sh"
 
-configure_zsh() {
-    if [ ! -d "${PATH_PURE}" ]; then
-        sudo mkdir -p "${PATH_PURE}"
-        sudo git clone 'https://github.com/sindresorhus/pure.git' "${PATH_PURE}"
-    fi
-    sed "s|ZSH_INSTALL_PATH|${PATH_OHMYZSH}|" "${WORKING_DIR}/config-files/zsh/.zshrc" | 
-        sed "s|PURE_INSTALL_PATH|${PATH_PURE}|" |
-        sudo tee "${HOME}/.zshrc"
-    sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.zshrc"
-}
-
 notification_daemon() {
     sudo cp -R "${WORKING_DIR}/config-files/notification-daemon/usr" /
 }
@@ -73,11 +62,7 @@ main() {
     fi
 
     case "${G_CONFIG}" in
-        "zsh")
-            perform_task configure_zsh "Applying zsh config for user ${G_USER}"
-            ;;
         *)
-            perform_task configure_zsh "Applying zsh config for user ${G_USER}"
             perform_task notification_daemon "Applying notification-daemon config for user ${G_USER}"
             ;;
     esac
