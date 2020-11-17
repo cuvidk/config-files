@@ -17,11 +17,6 @@ configure_zsh() {
     sudo chown -R "${G_USER}":"${G_USER}" "${HOME}/.zshrc"
 }
 
-configure_ly() {
-    sudo cp -R "${WORKING_DIR}/config-files/ly/etc" /
-}
-
-
 notification_daemon() {
     sudo cp -R "${WORKING_DIR}/config-files/notification-daemon/usr" /
 }
@@ -78,15 +73,11 @@ main() {
     fi
 
     case "${G_CONFIG}" in
-        "ly")
-            perform_task configure_ly "Applying ly config for user ${G_USER}"
-            ;;
         "zsh")
             perform_task configure_zsh "Applying zsh config for user ${G_USER}"
             ;;
         *)
             perform_task configure_zsh "Applying zsh config for user ${G_USER}"
-            perform_task configure_ly "Applying ly config for user ${G_USER}"
             perform_task notification_daemon "Applying notification-daemon config for user ${G_USER}"
             ;;
     esac
