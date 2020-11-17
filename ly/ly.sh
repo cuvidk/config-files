@@ -3,12 +3,14 @@
 SCRIPT_DIR="$(realpath "$(dirname "${0}")")"
 . "${SCRIPT_DIR}/../shell-utils/util.sh"
 
-pre_install() {(
-    set -e
-    AUR_PKG_INSTALL_USER='aur'
-    useradd "${AUR_PKG_INSTALL_USER}"
-    echo "${AUR_PKG_INSTALL_USER} ALL=(ALL) NOPASSWD:ALL" >"/etc/sudoers.d/${AUR_PKG_INSTALL_USER}"
-)}
+pre_install() {
+    export AUR_PKG_INSTALL_USER='aur'
+    (
+        set -e
+        useradd "${AUR_PKG_INSTALL_USER}"
+        echo "${AUR_PKG_INSTALL_USER} ALL=(ALL) NOPASSWD:ALL" >"/etc/sudoers.d/${AUR_PKG_INSTALL_USER}"
+    )
+}
 
 install() {(
     set -e

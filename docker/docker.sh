@@ -12,8 +12,11 @@ pre_install() {
 install() {(
     set -e
     pacman -S --noconfirm --needed docker
-    git clone 'https://github.com/docker/docker-credential-helpers'
-    cd ./docker-credential-helpers
+    # the following shit fails to auto build so i'm preventing exiting
+    # the current subshell by always exiting with 0 from the subshell in
+    # which it executes
+    (go get github.com/docker/docker-credential-helpers || exit 0)
+    cd ${GOPATH}/src/github.com/docker/docker-credential-helpers
     make secretservice
     cp ./bin/docker-credential-secretservice "${PATH_DOCKER_SECRET_SERVICE}"
     cd -

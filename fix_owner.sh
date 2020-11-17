@@ -8,6 +8,15 @@ usage() {
     print_msg "Usage: ${0} <username>"
 }
 
+fix_owner() {
+    chown -R "${USER}":"${USER}" "${HOME}/.config"
+    chown -R "${USER}":"${USER}" "${HOME}/.ssh"
+    chown -R "${USER}":"${USER}" "${HOME}/.docker"
+    chown -R "${USER}":"${USER}" "${PATH_VIM_CONFIG}"
+    chown -R "${USER}":"${USER}" "${PATH_ZSH_CONFIG}"
+    chown -R "${USER}":"${USER}" "${PATH_GOLANG}"
+}
+
 main() {
     setup_verbosity "${@}"
 
@@ -26,12 +35,7 @@ main() {
     PATH_VIM_CONFIG="$(echo "${PATH_VIM_CONFIG}" | sed "s|HOME|${HOME}|")"
     PATH_ZSH_CONFIG="$(echo "${PATH_ZSH_CONFIG}" | sed "s|HOME|${HOME}|")"
 
-    chown -R "${USER}":"${USER}" "${HOME}/.config"
-    chown -R "${USER}":"${USER}" "${HOME}/.ssh"
-    chown -R "${USER}":"${USER}" "${HOME}/.docker"
-    chown -R "${USER}":"${USER}" "${PATH_VIM_CONFIG}"
-    chown -R "${USER}":"${USER}" "${PATH_ZSH_CONFIG}"
-    chown -R "${USER}":"${USER}" "${PATH_GOLANG}"
+    perform_task fix_owner "setting ${USER} as owner of config files"
 
     check_for_errors
 }
