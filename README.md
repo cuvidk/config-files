@@ -1,2 +1,2 @@
 # config-files
-A bunch of config files and a script that properly copies them to the appropriate location
+A bunch of scripts to make the installation of various software and it's configuration easier
