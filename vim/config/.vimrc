@@ -2,7 +2,7 @@
 
 syntax enable
 set background=light
-colorscheme elflord
+colorscheme abstract 
 
 set nu
 set relativenumber

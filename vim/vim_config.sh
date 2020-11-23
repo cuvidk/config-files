@@ -9,12 +9,14 @@ install() {(
     mkdir -p "$(dirname "${PATH_VIM_PROFILE}")"
     cp "${SCRIPT_DIR}/config/vim.sh" "${PATH_VIM_PROFILE}"
     cp "${SCRIPT_DIR}/config/.vimrc" "${PATH_VIM_CONFIG}"
+    cp -r "${SCRIPT_DIR}/config/colors" "${PATH_VIM_DIR}"
 )}
 
 uninstall() {(
     set -e
     rm -rf "${PATH_VIM_CONFIG}"
     rm -rf "${PATH_VIM_PROFILE}"
+    rm -rf "${PATH_VIM_DIR}"
 )}
 
 usage() {
@@ -63,6 +65,7 @@ main() {
     [ -z "${HOME}" -o ! -d "${HOME}" ] && usage && exit 3
 
     PATH_VIM_CONFIG=$(echo ${PATH_VIM_CONFIG} | sed "s|HOME|${HOME}|")
+    PATH_VIM_DIR=$(echo ${PATH_VIM_DIR} | sed "s|HOME|${HOME}|")
 
     perform_task ${action} "${action}ing vim config for user ${USER}"
 
