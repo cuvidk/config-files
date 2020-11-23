@@ -8,6 +8,7 @@ install() {(
     set -e
     mkdir -p "$(dirname "${PATH_PICOM_CONFIG}")"
     cp "${SCRIPT_DIR}/config/picom.conf" "${PATH_PICOM_CONFIG}"
+    exit 0
 )}
 
 uninstall() {

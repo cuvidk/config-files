@@ -10,12 +10,14 @@ install() {(
     cp "${SCRIPT_DIR}/config/kitty.sh" "${PATH_KITTY_PROFILE}"
     mkdir -p "$(dirname "${PATH_KITTY_CONFIG}")"
     cp "${SCRIPT_DIR}/config/kitty.conf" "${PATH_KITTY_CONFIG}"
+    exit 0
 )}
 
 uninstall() {(
     set -e
     rm -rf "${PATH_KITTY_CONFIG}"
     rm -rf "${PATH_KITTY_PROFILE}"
+    exit 0
 )}
 
 usage() {

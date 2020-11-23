@@ -8,6 +8,7 @@ install() {(
     set -e
     mkdir -p "$(dirname ${PATH_GO_PROFILE})"
     cp "${SCRIPT_DIR}/config/go.sh" "${PATH_GO_PROFILE}"
+    exit 0
 )}
 
 uninstall() {

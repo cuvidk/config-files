@@ -8,6 +8,7 @@ install() {(
     set -e
     mkdir -p "$(dirname ${PATH_LY_CONFIG})"
     cp "${SCRIPT_DIR}/config/config.ini" "${PATH_LY_CONFIG}"
+    exit 0
 )}
 
 uninstall() {

@@ -9,6 +9,7 @@ install() {(
     mkdir -p "$(dirname ${PATH_DOCKER_CONFIG})"
     cp "${SCRIPT_DIR}/config/config.json" "${PATH_DOCKER_CONFIG}"
     gpasswd -a "${USER}" docker
+    exit 0
 )}
 
 uninstall() {

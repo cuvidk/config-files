@@ -8,6 +8,7 @@ install() {(
     set -e
     mkdir -p "$(dirname ${PATH_NOTIFICATION_DAEMON_CONFIG})"
     cp "${SCRIPT_DIR}/config/org.freedesktop.Notifications.service" "${PATH_NOTIFICATION_DAEMON_CONFIG}"
+    exit 0
 )}
 
 uninstall() {

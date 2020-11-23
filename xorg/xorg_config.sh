@@ -8,6 +8,7 @@ install() {(
     set -e
     mkdir -p "$(dirname "${PATH_XORG_TOUCHPAD_CONFIG}")"
     cp "${SCRIPT_DIR}/config/30-touchpad.conf" "${PATH_XORG_TOUCHPAD_CONFIG}"
+    exit 0
 )}
 
 uninstall() {

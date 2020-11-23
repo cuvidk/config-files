@@ -11,6 +11,7 @@ post_install() {(
     set -e
     "${SCRIPT_DIR}/go_config.sh" install --for-user "${USER}" ${VERBOSE}
     [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/go_config.sh" install --for-user "${SUDO_USER}" ${VERBOSE}
+    exit 0
 )}
 
 uninstall() {
@@ -21,6 +22,7 @@ post_uninstall() {(
     set -e
     "${SCRIPT_DIR}/go_config.sh" uninstall --for-user "${USER}" ${VERBOSE}
     [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/go_config.sh" uninstall --for-user "${SUDO_USER}" ${VERBOSE}
+    exit 0
 )}
 
 usage() {

@@ -7,24 +7,28 @@ install() {(
     set -e
     pacman -S --noconfirm --needed xorg-server
     pacman -S --noconfirm --needed xorg-xinit
+    exit 0
 )}
 
 post_install() {(
     set -e
     "${SCRIPT_DIR}/xorg_config.sh" install --for-user "${USER}" ${VERBOSE}
     [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/xorg_config.sh" install --for-user "${SUDO_USER}" ${VERBOSE}
+    exit 0
 )}
 
 uninstall() {(
     set -e
     pacman -Rs --noconfirm xorg-server
     pacman -Rs --noconfirm xorg-xinit
+    exit 0
 )}
 
 post_uninstall() {(
     set -e
     "${SCRIPT_DIR}/xorg_config.sh" uninstall --for-user "${USER}" ${VERBOSE}
     [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/xorg_config.sh" uninstall --for-user "${SUDO_USER}" ${VERBOSE}
+    exit 0
 )}
 
 usage() {

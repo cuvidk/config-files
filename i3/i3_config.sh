@@ -8,6 +8,7 @@ install() {(
     set -e
     mkdir -p "$(dirname ${PATH_I3_CONFIG})"
     cp "${SCRIPT_DIR}/config/config" "${PATH_I3_CONFIG}"
+    exit 0
 )}
 
 uninstall() {

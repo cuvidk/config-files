@@ -21,6 +21,7 @@ install() {(
     cp ./bin/docker-credential-secretservice "${PATH_DOCKER_SECRET_SERVICE}"
     cd -
     rm -rf ./docker-credential-helpers
+    exit 0
 )}
 
 post_install() {(
@@ -28,6 +29,7 @@ post_install() {(
     "${SCRIPT_DIR}/docker_config.sh" install --for-user "${USER}" ${VERBOSE}
     [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/docker_config.sh" install --for-user "${SUDO_USER}" ${VERBOSE}
     systemctl enable docker.service
+    exit 0
 )}
 
 pre_uninstall() {
@@ -38,6 +40,7 @@ uninstall() {(
     set -e
     pacman -Rs --noconfirm docker
     rm -rf "${PATH_DOCKER_SECRET_SERVICE}"
+    exit 0
 )}
 
 post_uninstall() {(
@@ -46,6 +49,7 @@ post_uninstall() {(
     [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/docker_config.sh" uninstall --for-user "${SUDO_USER}" ${VERBOSE}
 
     "${SCRIPT_DIR}/../go/go.sh" uninstall ${VERBOSE}
+    exit 0
 )}
 
 usage() {

@@ -10,6 +10,7 @@ install() {(
     cp "${SCRIPT_DIR}/config/vim.sh" "${PATH_VIM_PROFILE}"
     cp "${SCRIPT_DIR}/config/.vimrc" "${PATH_VIM_CONFIG}"
     cp -r "${SCRIPT_DIR}/config/colors" "${PATH_VIM_DIR}"
+    exit 0
 )}
 
 uninstall() {(
@@ -17,6 +18,7 @@ uninstall() {(
     rm -rf "${PATH_VIM_CONFIG}"
     rm -rf "${PATH_VIM_PROFILE}"
     rm -rf "${PATH_VIM_DIR}"
+    exit 0
 )}
 
 usage() {

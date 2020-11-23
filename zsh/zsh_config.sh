@@ -11,12 +11,14 @@ install() {(
         sed "s|PURE_INSTALL_PATH|${PATH_PURE}|" |
         tee "${PATH_ZSH_CONFIG}"
     chsh -s /bin/zsh "${USER}"
+    exit 0
 )}
 
 uninstall() {(
     set -e
     rm -rf "${PATH_ZSH_CONFIG}"
     chsh -s /bin/bash "${USER}"
+    exit 0
 )}
 
 usage() {

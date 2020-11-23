@@ -18,10 +18,10 @@ post_install() {(
     git clone 'https://github.com/sindresorhus/pure.git' "${PATH_PURE}"
     "${SCRIPT_DIR}/zsh_config.sh" install --for-user "${USER}" ${VERBOSE}
     [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/zsh_config.sh" install --for-user "${SUDO_USER}" ${VERBOSE}
+    exit 0
 )}
 
 uninstall() {
-    set -e
     pacman -Rs --noconfirm zsh
 }
 
@@ -31,6 +31,7 @@ post_uninstall() {(
     [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/zsh_config.sh" uninstall --for-user "${SUDO_USER}" ${VERBOSE}
     rm -rf "${PATH_PURE}"
     rm -rf "${PATH_OHMYZSH}"
+    exit 0
 )}
 
 usage() {

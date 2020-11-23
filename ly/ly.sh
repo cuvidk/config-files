@@ -9,6 +9,7 @@ pre_install() {
         set -e
         useradd "${AUR_PKG_INSTALL_USER}"
         echo "${AUR_PKG_INSTALL_USER} ALL=(ALL) NOPASSWD:ALL" >"/etc/sudoers.d/${AUR_PKG_INSTALL_USER}"
+        exit 0
     )
 }
 
@@ -21,6 +22,7 @@ install() {(
     pacman -U --noconfirm *.pkg.tar.*
     cd -
     rm -rf "ly-git"
+    exit 0
 )}
 
 post_install() {(
@@ -31,6 +33,7 @@ post_install() {(
     rm "/etc/sudoers.d/${AUR_PKG_INSTALL_USER}"
     systemctl disable getty@tty2.service
     systemctl enable ly.service
+    exit 0
 )}
 
 uninstall() {(
@@ -38,12 +41,14 @@ uninstall() {(
     systemctl enable getty@tty2.service
     systemctl disable ly.service
     pacman -Rs --noconfirm ly-git
+    exit 0
 )}
 
 post_uninstall() {(
     set -e
     "${SCRIPT_DIR}/ly_config.sh" uninstall --for-user "${USER}" ${VERBOSE}
     [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/ly_config.sh" uninstall --for-user "${SUDO_USER}" ${VERBOSE}
+    exit 0
 )}
 
 usage() {
