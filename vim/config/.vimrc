@@ -2,7 +2,8 @@
 
 syntax enable
 set background=light
-colorscheme abstract
+colorscheme tender
+hi Normal guibg=NONE ctermbg=NONE
 
 set nu
 set relativenumber
