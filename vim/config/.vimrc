@@ -2,7 +2,7 @@
 
 syntax enable
 set background=light
-colorscheme abstract 
+colorscheme abstract
 
 set nu
 set relativenumber

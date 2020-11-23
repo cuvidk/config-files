@@ -14,6 +14,7 @@ fix_owner() {
     chown -R "${USER}":"${USER}" "${HOME}/.docker"
     chown -R "${USER}":"${USER}" "${HOME}/.zprofile"
     chown -R "${USER}":"${USER}" "${PATH_VIM_CONFIG}"
+    chown -R "${USER}":"${USER}" "${PATH_VIM_DIR}"
     chown -R "${USER}":"${USER}" "${PATH_ZSH_CONFIG}"
     chown -R "${USER}":"${USER}" "${PATH_GOLANG}"
 }
