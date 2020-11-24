@@ -9,7 +9,7 @@ install() {(
     mkdir -p "$(dirname "${PATH_VIM_PROFILE}")"
     cp "${SCRIPT_DIR}/config/vim.sh" "${PATH_VIM_PROFILE}"
     cp "${SCRIPT_DIR}/config/.vimrc" "${PATH_VIM_CONFIG}"
-    mkdir -p "${PATH_VIM_DIR}/colors"
+    mkdir -p "${PATH_VIM_DIR}"
     cp -r "${SCRIPT_DIR}/config/colors" "${PATH_VIM_DIR}/colors"
     exit 0
 )}
