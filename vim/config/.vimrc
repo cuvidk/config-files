@@ -8,7 +8,7 @@ set relativenumber
 set hidden
 set autoindent
 set cindent
-set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
 set colorcolumn=250
 set laststatus=2
 set cursorline
