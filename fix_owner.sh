@@ -35,6 +35,7 @@ main() {
     [ -z "${HOME}" -o ! -d "${HOME}" ] && usage && exit 2
 
     PATH_VIM_CONFIG="$(echo "${PATH_VIM_CONFIG}" | sed "s|HOME|${HOME}|")"
+    PATH_VIM_DIR="$(echo "${PATH_VIM_DIR}" | sed "s|HOME|${HOME}|")"
     PATH_ZSH_CONFIG="$(echo "${PATH_ZSH_CONFIG}" | sed "s|HOME|${HOME}|")"
 
     perform_task fix_owner "setting ${USER} as owner of config files"

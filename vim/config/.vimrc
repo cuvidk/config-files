@@ -1,5 +1,3 @@
-"vundle plugin manager
-
 syntax enable
 set background=light
 colorscheme tender
