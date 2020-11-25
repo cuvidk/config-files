@@ -1,16 +1,11 @@
-#!/bin/sh
-
-SCRIPT_DIR="$(realpath "$(dirname "${0}")")"
-. "${SCRIPT_DIR}/../shell-utils/util.sh"
-
 install() {
     pacman -S --noconfirm --needed go
 }
 
 post_install() {(
     set -e
-    "${SCRIPT_DIR}/go_config.sh" install --for-user "${USER}" ${VERBOSE}
-    [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/go_config.sh" install --for-user "${SUDO_USER}" ${VERBOSE}
+    "${MAKE_SCRIPT_DIR}/make_config.sh" install go "${USER}" ${VERBOSE}
+    [ -n "${SUDO_USER}" ] && "${MAKE_SCRIPT_DIR}/make_config.sh" install go "${SUDO_USER}" ${VERBOSE}
     exit 0
 )}
 
@@ -20,34 +15,7 @@ uninstall() {
 
 post_uninstall() {(
     set -e
-    "${SCRIPT_DIR}/go_config.sh" uninstall --for-user "${USER}" ${VERBOSE}
-    [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/go_config.sh" uninstall --for-user "${SUDO_USER}" ${VERBOSE}
+    "${MAKE_SCRIPT_DIR}/make_config.sh" uninstall go "${USER}" ${VERBOSE}
+    [ -n "${SUDO_USER}" ] && "${MAKE_SCRIPT_DIR}/make_config.sh" uninstall go "${SUDO_USER}" ${VERBOSE}
     exit 0
 )}
-
-usage() {
-    print_msg "Usage: ${0} <install | uninstall> [--verbose]"
-}
-
-main() { 
-    setup_verbosity "${@}"
-
-    case "${1}" in
-        "install")
-            perform_task install 'installing go'
-            perform_task post_install
-            ;;
-        "uninstall")
-            perform_task uninstall 'uninstalling go'
-            perform_task post_uninstall
-            ;;
-        *)
-            usage
-            exit 1
-            ;;
-    esac
-
-    check_for_errors
-}
-
-main "${@}"

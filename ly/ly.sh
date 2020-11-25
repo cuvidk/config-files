@@ -1,8 +1,3 @@
-#!/bin/sh
-
-SCRIPT_DIR="$(realpath "$(dirname "${0}")")"
-. "${SCRIPT_DIR}/../shell-utils/util.sh"
-
 pre_install() {
     export AUR_PKG_INSTALL_USER='aur'
     (
@@ -27,8 +22,8 @@ install() {(
 
 post_install() {(
     set -e
-    "${SCRIPT_DIR}/ly_config.sh" install --for-user "${USER}" ${VERBOSE}
-    [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/ly_config.sh" install --for-user "${SUDO_USER}" ${VERBOSE}
+    "${MAKE_SCRIPT_DIR}/make_config.sh" install ly "${USER}" ${VERBOSE}
+    [ -n "${SUDO_USER}" ] && "${MAKE_SCRIPT_DIR}/make_config.sh" install ly "${SUDO_USER}" ${VERBOSE}
     userdel "${AUR_PKG_INSTALL_USER}"
     rm "/etc/sudoers.d/${AUR_PKG_INSTALL_USER}"
     systemctl disable getty@tty2.service
@@ -46,35 +41,7 @@ uninstall() {(
 
 post_uninstall() {(
     set -e
-    "${SCRIPT_DIR}/ly_config.sh" uninstall --for-user "${USER}" ${VERBOSE}
-    [ -n "${SUDO_USER}" ] && "${SCRIPT_DIR}/ly_config.sh" uninstall --for-user "${SUDO_USER}" ${VERBOSE}
+    "${MAKE_SCRIPT_DIR}/make_config.sh" uninstall ly "${USER}" ${VERBOSE}
+    [ -n "${SUDO_USER}" ] && "${MAKE_SCRIPT_DIR}/make_config.sh" uninstall ly "${SUDO_USER}" ${VERBOSE}
     exit 0
 )}
-
-usage() {
-    print_msg "Usage: ${0} <install | uninstall> [--verbose]"
-}
-
-main() { 
-    setup_verbosity "${@}"
-
-    case "${1}" in
-        "install")
-            perform_task pre_install 'preinstall ly'
-            perform_task install 'installing ly'
-            perform_task post_install
-            ;;
-        "uninstall")
-            perform_task uninstall 'uninstalling ly'
-            perform_task post_uninstall
-            ;;
-        *)
-            usage
-            exit 1
-            ;;
-    esac
-
-    check_for_errors
-}
-
-main "${@}"
