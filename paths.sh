@@ -7,6 +7,7 @@ PATH_DOCKER_SECRET_SERVICE='/usr/bin/docker-credential-secretservice'
 
 PATH_I3_CONFIG='HOME/.config/i3/config'
 PATH_I3_STATUS_CONFIG='HOME/.config/i3status/config'
+PATH_I3_SCRIPTS='HOME/.config/i3/scripts'
 PATH_PICOM_CONFIG='/etc/xdg/picom.conf'
 PATH_VIM_CONFIG='HOME/.vimrc'
 PATH_VIM_PROFILE='/etc/profile.d/vim.sh'

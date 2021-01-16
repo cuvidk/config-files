@@ -20,6 +20,9 @@ smart_gaps on
 # sets random wallpaper
 exec_always --no-startup-id feh --bg-fill --randomize ~/Pictures/wallpapers/*
 
+# configures resolution
+exec_always --no-startup-id  PATH_I3_SCRIPTS/setup_resolution.sh
+
 # run the compositor for no screen tearing, fading, transparency, etc
 exec --no-startup-id picom -b
 

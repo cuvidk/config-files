@@ -10,6 +10,7 @@ perform_replacements() {
     PATH_GOLANG="$(echo ${PATH_GOLANG} | sed "s|HOME|${HOME}|")"
     PATH_DOCKER_SECRET_SERVICE="$(echo ${PATH_DOCKER_SECRET_SERVICE} | sed "s|HOME|${HOME}|")"
     PATH_I3_CONFIG="$(echo ${PATH_I3_CONFIG} | sed "s|HOME|${HOME}|")"
+    PATH_I3_SCRIPTS="$(echo ${PATH_I3_SCRIPTS} | sed "s|HOME|${HOME}|")"
     PATH_I3_STATUS_CONFIG="$(echo ${PATH_I3_STATUS_CONFIG} | sed "s|HOME|${HOME}|")"
     PATH_PICOM_CONFIG="$(echo ${PATH_PICOM_CONFIG} | sed "s|HOME|${HOME}|")"
     PATH_VIM_CONFIG="$(echo ${PATH_VIM_CONFIG} | sed "s|HOME|${HOME}|")"

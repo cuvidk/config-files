@@ -2,6 +2,7 @@ install() {(
     set -e
     pacman -S --noconfirm --needed xorg-server
     pacman -S --noconfirm --needed xorg-xinit
+    pacman -S --noconfirm --needed xorg-xrandr
     exit 0
 )}
 
@@ -16,6 +17,7 @@ uninstall() {(
     set -e
     pacman -Rs --noconfirm xorg-server
     pacman -Rs --noconfirm xorg-xinit
+    pacman -Rs --noconfirm xorg-xrandr
     exit 0
 )}
 
