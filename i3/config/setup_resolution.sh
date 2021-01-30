@@ -1,12 +1,24 @@
 #!/bin/sh
 
-VGA1=$(xrandr | grep VGA1 | grep -o connected)
-eDP1=$(xrandr | grep eDP1 | grep -o connected)
+MBOARD="$(cat /sys/devices/virtual/dmi/id/board_name)"
+MAIN="$(xrandr | grep -m 1 ' connected' | cut -f 1 -d ' ')"
+OTHER="$(xrandr | grep ' connected' | grep -v "${MAIN}" | cut -f 1 -d ' ')"
 
-if [ -n "${eDP1}" -a -n "${VGA1}" ]; then
-    # probably laptop with additional VGA cable connected:
-    # - turn laptop display off
-    # - enable display connected through VGA as main display
-    xrandr --output eDP1 --off
-    xrandr --output VGA1 --auto
-fi
+case "${MBOARD}" in
+    'VIUU4') # notebook
+        [ -n "${OTHER}" ] && xrandr --output "${MAIN}" --off
+        prev_output=
+        for output in $(echo "${OTHER}"); do
+            if [ -z "${prev_output}" ]; then
+                xrandr --output "${output}" --off
+                xrandr --output "${output}" --auto --primary
+            else
+                xrandr --output "${output}" --off
+                xrandr --output "${output}" --auto --right-of "${prev_output}"
+            fi
+            prev_output="${output}"
+        done
+        ;;
+    *) # do nothing
+        ;;
+esac
