@@ -21,10 +21,8 @@ smart_gaps on
 exec_always --no-startup-id feh --bg-fill --randomize ~/Pictures/wallpapers/*
 
 # run the compositor for no screen tearing, fading, transparency, etc
-exec --no-startup-id picom -b
-
-# configures resolution
-exec_always --no-startup-id  PATH_I3_SCRIPTS/setup_resolution.sh
+# after the compositor is up, run the setup_resolution script
+exec_always --no-startup-id "(pgrep picom || picom -b) && PATH_I3_SCRIPTS/setup_resolution.sh"
 
 set $mod Mod4
 
