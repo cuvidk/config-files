@@ -25,4 +25,25 @@ jobs:
           -H "Authorization: Bearer ${TOKEN_WORKFLOW_DISPATCH}" \
           -X POST \
           -d '{ "ref": "master" }' \
-          --url 'https://api.github.com/repos/cuvidk/os-setup/actions/workflows/update.yml/dispatches'
+          --url 'https://api.github.com/repos/cuvidk/os-setup/actions/workflows/update_deps.yml/dispatches'
+         
+      - name: Trigger config-files ref update for hunter
+        env:
+          TOKEN_WORKFLOW_DISPATCH: "${{ secrets.TOKEN_WORKFLOW_DISPATCH }}"
+        run: |
+          curl -H 'Accept: application/vnd.github.v3+json' \
+          -H "Authorization: Bearer ${TOKEN_WORKFLOW_DISPATCH}" \
+          -X POST \
+          -d '{ "ref": "master" }' \
+          --url 'https://api.github.com/repos/cuvidk/hunter/actions/workflows/update_deps.yml/dispatches'
+           
+      - name: Trigger config-files ref update for private repos
+        env:
+          TOKEN_WORKFLOW_DISPATCH: "${{ secrets.TOKEN_WORKFLOW_DISPATCH }}"
+          PRIVATE_REPO: "${{ secrets.PRIVATE_REPO }}"
+        run: |
+          curl -H 'Accept: application/vnd.github.v3+json' \
+          -H "Authorization: Bearer ${TOKEN_WORKFLOW_DISPATCH}" \
+          -X POST \
+          -d '{ "ref": "main" }' \
+          --url "https://api.github.com/repos/cuvidk/${PRIVATE_REPO}/actions/workflows/update_deps.yml/dispatches"
