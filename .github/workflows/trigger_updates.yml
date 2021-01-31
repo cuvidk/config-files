@@ -22,7 +22,7 @@ jobs:
           TOKEN_WORKFLOW_DISPATCH: "${{ secrets.TOKEN_WORKFLOW_DISPATCH }}"
         run: |
           curl -H 'Accept: application/vnd.github.v3+json' \
-          -H "Authorization: Bearer ${TOKEN_WORKFLOW_DISPATCH}"
+          -H "Authorization: Bearer ${TOKEN_WORKFLOW_DISPATCH}" \
           -X POST \
           -d '{ "ref": "master" }' \
           --url 'https://api.github.com/repos/cuvidk/os-setup/actions/workflows/update.yml/dispatches'
